@@ -1,0 +1,16 @@
+{
+  "name": "line-webhook",
+  "version": "1.0.0",
+  "description": "line oa webhook",
+  "main": "server.js",
+  "scripts": {
+    "test": "node service.js"
+  },
+  "author": "Pakkanat Arunothaijitr (Bank)",
+  "license": "ISC",
+  "dependencies": {
+    "@line/bot-sdk": "^9.5.3",
+    "aws-sdk": "^2.1692.0",
+    "dotenv": "^16.4.7"
+  }
+}
