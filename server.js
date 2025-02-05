@@ -1,7 +1,10 @@
 require("dotenv").config();
+const express = require("express");
 const { Client } = require("@line/bot-sdk");
 
-// LINE Bot Config
+const app = express();
+const port = process.env.PORT || 8080;
+
 const config = {
     channelAccessToken: process.env.LINE_ACCESS_TOKEN,
     channelSecret: process.env.LINE_CHANNEL_SECRET,
@@ -9,22 +12,19 @@ const config = {
 
 const client = new Client(config);
 
-exports.handler = async (event) => {
-    const body = JSON.parse(event.body);
+app.use(express.json());
 
-    const promises = body.events.map(async (event) => {
+app.post("/webhook", async (req, res) => {
+    const events = req.body.events;
+    for (let event of events) {
         if (event.type === "message" && event.message.type === "text") {
-            return client.replyMessage(event.replyToken, {
+            await client.replyMessage(event.replyToken, {
                 type: "text",
                 text: `You said: ${event.message.text}`,
             });
         }
-    });
+    }
+    res.sendStatus(200);
+});
 
-    await Promise.all(promises);
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: "OK" }),
-    };
-};
+app.listen(port, () => console.log(`Server running on port ${port}`));
